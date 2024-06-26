@@ -1,9 +1,18 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Comex;
+using Comex.Menus;
+using Comex.Modelos;
+using Comex.Utils;
 using System.Text.Json;
 
-// lstpt = lista de produtos para ser utilizada durante os testes
-var lstpt = new List<Produto>
+MenuCriarProduto menuCriarProduto = new MenuCriarProduto();
+MenuListarProdutos menuListarProdutos = new MenuListarProdutos();
+using HttpClient client = new HttpClient();
+MenuConsultaApiExterna menuConsultaApiExterna = new MenuConsultaApiExterna(client);
+MenuOrdenarProdutos menuOrdenarProdutos = new MenuOrdenarProdutos();
+MenuCriarPedido menuCriarPedido = new MenuCriarPedido();
+MenuListarPedidos menuListarPedidos = new MenuListarPedidos();
+
+var listaDeProdutos = new List<Produto>
 {
     new Produto("Notebook")
     {
@@ -31,14 +40,11 @@ var lstpt = new List<Produto>
     }
 };
 
-// ltspd = lista de pedidos para ser utilizada durante os testes
-var ltspd = new List<Pedido>();
+var listaDePedidos = new List<Pedido>();
 
-// ms = mensagem de boas veindas do projeto
-string ms = "Boas vindas ao COMEX";
+string mensagemDeBoasVindas = "Boas vindas ao COMEX";
 
-// Método que tem função de Exibir o Logo
-void Elg()
+void ExibirLogo()
 {
     Console.WriteLine(@"
 ────────────────────────────────────────────────────────────────────────────────────────
@@ -54,13 +60,12 @@ void Elg()
 ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██──────────██░░██─██░░░░░░░░░░██─██░░░░██──██░░░░██─
 ─██████████████─██████████████─██████──────────██████─██████████████─████████──████████─
 ────────────────────────────────────────────────────────────────────────────────────────");
-    Console.WriteLine(ms);
+    Console.WriteLine(mensagemDeBoasVindas);
 }
 
-// Método que tem função de Exibir Opcoes Do Menu
-async Task Epdm()
+async Task ExibirOpcoesDeMenu()
 {
-    Elg();
+    ExibirLogo();
     Console.WriteLine("\nDigite 1 Criar Produto");
     Console.WriteLine("Digite 2 Listar Produtos");
     Console.WriteLine("Digite 3 Consultar API Externa");
@@ -77,153 +82,32 @@ async Task Epdm()
     switch (opcaoEscolhidaNumerica)
     {
         case 1:
-            Console.Clear();
-            Console.WriteLine("Registro de Produto");
-
-            Console.Write("Digite o nome do Produto: ");
-            string nomeDoProduto = Console.ReadLine();
-            var produto = new Produto(nomeDoProduto);
-
-            Console.Write("Digite a descrição do Produto: ");
-            string descricaoDoProduto = Console.ReadLine();
-            produto.Descricao = descricaoDoProduto;
-
-            Console.Write("Digite o preço do Produto: ");
-            string preçoDoProduto = Console.ReadLine();
-            produto.PrecoUnitario = double.Parse(preçoDoProduto);
-
-            Console.Write("Digite a quantidade do Produto: ");
-            string quantidadeDoProduto = Console.ReadLine();
-            produto.Quantidade = int.Parse(quantidadeDoProduto);
-
-            lstpt.Add(produto);
-            Console.WriteLine($"O Produto {produto.Nome} foi registrado com sucesso!");
-            Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
-            Console.ReadKey();
-            Console.Clear();
-            await Epdm();
+            menuCriarProduto.CriarProduto(listaDeProdutos);
+            await ExibirOpcoesDeMenu();
             break;
         case 2:
-            Console.Clear();
-
-            //ExibirTituloDaOpcao("Exibindo todos os produtos registradoss na nossa aplicação");
-            Console.WriteLine("Exibindo todos os produtos registradoss na nossa aplicação");
-
-            for (int i = 0; i < lstpt.Count; i++)
-            {
-                Console.WriteLine($"Produto: {lstpt[i].Nome}, Preço: {lstpt[i].PrecoUnitario:F2}");
-            }
-
-            Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
-            Console.ReadKey();
-            Console.Clear();
-            await Epdm();
+            menuListarProdutos.ListarProdutos(listaDeProdutos);
+            await ExibirOpcoesDeMenu();
             break;
         case 3:
-            using (HttpClient client = new HttpClient())
-            {
-                try
-                {
-                    Console.Clear();
-                    Console.WriteLine("\nExibindo Produtos\n");
-                    string resposta = await client.GetStringAsync("http://fakestoreapi.com/products");
-                    var produtos = JsonSerializer.Deserialize<List<Produto>>(resposta)!;
-                    for (int i = 0; i < produtos.Count; i++)
-                    {
-                        Console.WriteLine($"Nome: {produtos[i].Nome}, " +
-                            $"Descrição: {produtos[i].Descricao}, " +
-                            $"Preço {produtos[i].PrecoUnitario} \n");
-                    }
-                    Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
-                    Console.ReadKey();
-                    Console.Clear();
-                    await Epdm();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Temos um problema: {ex.Message}");
-                }
-            }
+            await menuConsultaApiExterna.ConsultarApiExterna(listaDeProdutos);
+            await ExibirOpcoesDeMenu();
             break;
         case 4:
-            var produtosOrdenados = lstpt.OrderBy(p => p.Nome).ToList();
-            Console.Clear();
-            Console.WriteLine("Produtos ordenados pelo título:");
-            for (int i = 0; i < produtosOrdenados.Count; i++)
-            {
-                Console.WriteLine($"Produto: {produtosOrdenados[i].Nome}, Preço: {produtosOrdenados[i].PrecoUnitario:F2}");
-            }
-            Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
-            Console.ReadKey();
-            Console.Clear();
-            await Epdm();
+            menuOrdenarProdutos.OrdenarProdutosPeloTitulo(listaDeProdutos);
+            await ExibirOpcoesDeMenu();
             break;
         case 5:
-            var produtosOrdenadosPorPreco = lstpt.OrderBy(p => p.PrecoUnitario).ToList();
-            Console.Clear();
-            Console.WriteLine("Produtos ordenados pelo preço:");
-            for (int i = 0; i < produtosOrdenadosPorPreco.Count; i++)
-            {
-                Console.WriteLine($"Produto: {produtosOrdenadosPorPreco[i].Nome}, Preço: {produtosOrdenadosPorPreco[i].PrecoUnitario:F2}");
-            }
-            Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
-            Console.ReadKey();
-            Console.Clear();
-            await Epdm();
+            menuOrdenarProdutos.OrdenarProdutosPeloPreço(listaDeProdutos);
+            await ExibirOpcoesDeMenu();
             break;
         case 6:
-            Console.Clear();
-            Console.WriteLine("Criando um novo pedido\n");
-
-            Console.Write("Digite o nome do cliente: ");
-            string nomeCliente = Console.ReadLine()!;
-            var cliente = new Cliente();
-            cliente.Nome = nomeCliente;
-
-            var pedido = new Pedido(cliente);
-
-            Console.WriteLine("\nProdutos disponíveis:");
-            for (int i = 0; i < lstpt.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {lstpt[i].Nome}");
-            }
-
-            Console.Write("Digite o número do produto que deseja adicionar (ou 0 para finalizar): ");
-            int numeroProduto = int.Parse(Console.ReadLine()!);
-
-            var produtoEscolhido = lstpt[numeroProduto - 1];
-
-            Console.Write("Digite a quantidade: ");
-            int quantidade = int.Parse(Console.ReadLine()!);
-
-            var itemDePedido = new ItemDePedido(produtoEscolhido, quantidade, produtoEscolhido.PrecoUnitario);
-            pedido.AdicionarItem(itemDePedido);
-
-            Console.WriteLine($"Item adicionado: {itemDePedido}\n");
-
-
-            ltspd.Add(pedido);
-            Console.WriteLine($"\nPedido criado com sucesso:\n{pedido}");
-            Console.WriteLine("Pressione qualquer tecla para voltar ao menu...");
-            Console.ReadKey();
-            Console.Clear();
-            await Epdm();
+            menuCriarPedido.CriarPedido(listaDeProdutos, listaDePedidos);
+            await ExibirOpcoesDeMenu();
             break;
         case 7:
-            Console.Clear();
-            Console.WriteLine("Exibindo todos os produtos registradoss na nossa aplicação");
-
-            var pedidosOrdenados = ltspd.OrderBy(p => p.Cliente.Nome).ToList();
-
-            foreach (var Pedido in pedidosOrdenados)
-            {
-                Console.WriteLine($"Cliente: {Pedido.Cliente.Nome}, Total: {Pedido.Total:F2}");
-            }
-
-            Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
-            Console.ReadKey();
-            Console.Clear();
-            await Epdm();
+            menuListarPedidos.ListarPedidos(listaDePedidos);
+            await ExibirOpcoesDeMenu();
             break;
         case -1:
             Console.WriteLine("Tchau tchau :)");
@@ -234,7 +118,7 @@ async Task Epdm()
     }
 }
 
-await Epdm();
+await ExibirOpcoesDeMenu();
 
 
 
