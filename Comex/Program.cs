@@ -1,8 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Comex.Data;
 using Comex.Menus;
 using Comex.Modelos;
 using Comex.Utils;
 using System.Text.Json;
+
 
 MenuCriarProduto menuCriarProduto = new MenuCriarProduto();
 MenuListarProdutos menuListarProdutos = new MenuListarProdutos();
@@ -11,6 +13,10 @@ MenuConsultaApiExterna menuConsultaApiExterna = new MenuConsultaApiExterna(clien
 MenuOrdenarProdutos menuOrdenarProdutos = new MenuOrdenarProdutos();
 MenuCriarPedido menuCriarPedido = new MenuCriarPedido();
 MenuListarPedidos menuListarPedidos = new MenuListarPedidos();
+
+ProdutoDAL produtoDAL = new ProdutoDAL();
+ComexDbContext context = new ComexDbContext();
+ProdutoRespository produtoRepository = new ProdutoRespository(context);
 
 var listaDeProdutos = new List<Produto>
 {
@@ -82,23 +88,23 @@ async Task ExibirOpcoesDeMenu()
     switch (opcaoEscolhidaNumerica)
     {
         case 1:
-            menuCriarProduto.CriarProduto(listaDeProdutos);
+            menuCriarProduto.CriarProduto(produtoRepository);
             await ExibirOpcoesDeMenu();
             break;
         case 2:
-            menuListarProdutos.ListarProdutos(listaDeProdutos);
+            menuListarProdutos.ListarProdutos(produtoRepository);
             await ExibirOpcoesDeMenu();
             break;
         case 3:
-            await menuConsultaApiExterna.ConsultarApiExterna(listaDeProdutos);
+            await menuConsultaApiExterna.ConsultarApiExterna();
             await ExibirOpcoesDeMenu();
             break;
         case 4:
-            menuOrdenarProdutos.OrdenarProdutosPeloTitulo(listaDeProdutos);
+            menuOrdenarProdutos.OrdenarProdutosPeloTitulo(produtoRepository);
             await ExibirOpcoesDeMenu();
             break;
         case 5:
-            menuOrdenarProdutos.OrdenarProdutosPeloPreço(listaDeProdutos);
+            menuOrdenarProdutos.OrdenarProdutosPeloPreço(produtoRepository);
             await ExibirOpcoesDeMenu();
             break;
         case 6:

@@ -1,13 +1,14 @@
-﻿using Comex.Modelos;
+﻿using Comex.Data;
+using Comex.Modelos;
 using Comex.Utils;
 
 namespace Comex.Menus
 {
     public class MenuOrdenarProdutos
     {
-        public void OrdenarProdutosPeloTitulo(List<Produto> listaDeProdutos)
+        public void OrdenarProdutosPeloTitulo(ProdutoRespository produtoRespository)
         {
-            var produtosOrdenados = listaDeProdutos.OrderBy(p => p.Nome).ToList();
+            var produtosOrdenados = produtoRespository.Listar().ToList().OrderBy(p => p.Nome).ToList();
             Console.Clear();
             Console.WriteLine("Produtos ordenados pelo título:");
             for (int i = 0; i < produtosOrdenados.Count; i++)
@@ -17,9 +18,9 @@ namespace Comex.Menus
             ConsoleUtils.PararELimparAplicação();
         }
 
-        public void OrdenarProdutosPeloPreço(List<Produto> listaDeProdutos)
+        public void OrdenarProdutosPeloPreço(ProdutoRespository produtoRespository)
         {
-            var produtosOrdenadosPorPreco = listaDeProdutos.OrderBy(p => p.PrecoUnitario).ToList();
+            var produtosOrdenadosPorPreco = produtoRespository.Listar().ToList().OrderBy(p => p.PrecoUnitario).ToList();
             Console.Clear();
             Console.WriteLine("Produtos ordenados pelo preço:");
             for (int i = 0; i < produtosOrdenadosPorPreco.Count; i++)

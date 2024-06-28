@@ -12,7 +12,7 @@ namespace Comex.Menus
             this.client = client;
         }
 
-        public async Task ConsultarApiExterna(List<Produto> listaDeProdutos)
+        public async Task ConsultarApiExterna()
         {
             try
             {
