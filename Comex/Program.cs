@@ -128,9 +128,7 @@ async Task exibirMenuPrincipal()
                             $"Descrição: {produtos[i].Descricao}, " +
                             $"Preço {produtos[i].PrecoUnitario} \n");
                     }
-                    Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
-                    Console.ReadKey();
-                    Console.Clear();
+                    esperarUser();
                     await exibirMenuPrincipal();
                 }
                 catch (Exception ex)
@@ -147,9 +145,7 @@ async Task exibirMenuPrincipal()
             {
                 Console.WriteLine($"Produto: {produtosOrdenados[i].Nome}, Preço: {produtosOrdenados[i].PrecoUnitario:F2}");
             }
-            Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
-            Console.ReadKey();
-            Console.Clear();
+            esperarUser();
             await exibirMenuPrincipal();
             break;
         case 5:
@@ -160,9 +156,7 @@ async Task exibirMenuPrincipal()
             {
                 Console.WriteLine($"Produto: {produtosOrdenadosPorPreco[i].Nome}, Preço: {produtosOrdenadosPorPreco[i].PrecoUnitario:F2}");
             }
-            Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
-            Console.ReadKey();
-            Console.Clear();
+            esperarUser();
             await exibirMenuPrincipal();
             break;
         case 6:
@@ -198,9 +192,7 @@ async Task exibirMenuPrincipal()
 
             listaDePedidos.Add(pedido);
             Console.WriteLine($"\nPedido criado com sucesso:\n{pedido}");
-            Console.WriteLine("Pressione qualquer tecla para voltar ao menu...");
-            Console.ReadKey();
-            Console.Clear();
+            esperarUser();
             await exibirMenuPrincipal();
             break;
         case 7:
@@ -214,9 +206,7 @@ async Task exibirMenuPrincipal()
                 Console.WriteLine($"Cliente: {Pedido.Cliente.Nome}, Total: {Pedido.Total:F2}");
             }
 
-            Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
-            Console.ReadKey();
-            Console.Clear();
+            esperarUser();
             await exibirMenuPrincipal();
             break;
         case -1:
@@ -226,6 +216,13 @@ async Task exibirMenuPrincipal()
             Console.WriteLine("Opção inválida");
             break;
     }
+}
+
+void esperarUser()
+{
+    Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
+    Console.ReadKey();
+    Console.Clear();
 }
 
 void ExibirTituloDaOpcao(string titulo)
