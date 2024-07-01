@@ -73,45 +73,34 @@ async Task exibirMenuPrincipal()
     {
         case 1:
             criarProduto();
-            esperarUser();
-            await exibirMenuPrincipal();
             break;
         case 2:
             listarProdutos();
-            esperarUser();
-            await exibirMenuPrincipal();
             break;
         case 3:
             await consultarApiExternaAsync();
-            esperarUser();
-            await exibirMenuPrincipal();
             break;
         case 4:
             listarPorTitulo();
-            esperarUser();
-            await exibirMenuPrincipal();
             break;
         case 5:
             listarPorPreco();
-            esperarUser();
-            await exibirMenuPrincipal();
             break;
         case 6:
             criarPedido();
-            esperarUser();
-            await exibirMenuPrincipal();
             break;
         case 7:
             exibirPedidos();
-            await exibirMenuPrincipal();
             break;
         case -1:
             Console.WriteLine("Tchau tchau :)");
-            break;
+            return;
         default:
             Console.WriteLine("Opção inválida");
             break;
     }
+    esperarUser();
+    await exibirMenuPrincipal();
 }
 
 void criarProduto()
@@ -243,8 +232,6 @@ void exibirPedidos()
     {
         Console.WriteLine($"Cliente: {Pedido.Cliente.Nome}, Total: {Pedido.Total:F2}");
     }
-
-    esperarUser();
 }
 
 void esperarUser()
