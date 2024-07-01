@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Comex;
+using Comex.Modelos;
 using System.Text.Json;
 
 var listaDeProdutos = new List<Produto>
