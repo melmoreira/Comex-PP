@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ComexApiT1.Dtos;
+using ComexApiT1.Dtos.Produtos;
 using ComexApiT1.Models;
 
 namespace ComexApiT1.Profiles

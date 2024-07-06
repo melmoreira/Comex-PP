@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ComexApiT1.Data;
-using ComexApiT1.Dtos;
+using ComexApiT1.Dtos.Produtos;
 using ComexApiT1.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

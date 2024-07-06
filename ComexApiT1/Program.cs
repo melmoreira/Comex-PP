@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ComexDbConnection");
 
 builder.Services.AddDbContext<ComexApiContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseLazyLoadingProxies().UseSqlServer(connectionString));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
